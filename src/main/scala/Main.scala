@@ -106,6 +106,22 @@ object Table{
   }
 }
 
+object Flip{
+  /**
+    * Flip the cell
+    * @param cell
+    * @return
+    */
+  def flipCell(cell: Cell): Cell = {
+    require(cell != Empty)
+    cell match {
+      case Circle => Cross
+      case Cross  => Circle
+    }
+  }
+}
+
+
 object Minimax{
   /**
     * Find the best for turn
@@ -122,19 +138,6 @@ object Minimax{
 
     candidatePoss.maxBy{pos =>
       minimax(table, turn, turn, pos)
-    }
-  }
-
-  /**
-    * Flip the cell
-    * @param cell
-    * @return
-    */
-  def flipCell(cell: Cell): Cell = {
-    require(cell != Empty)
-    cell match {
-      case Circle => Cross
-      case Cross  => Circle
     }
   }
 
@@ -157,7 +160,7 @@ object Minimax{
         j <- 0 to 2
         if updatedTable((i, j)) == Empty
       } yield {
-        val nextTurn   = flipCell(turn)
+        val nextTurn   = Flip.flipCell(turn)
         minimax(updatedTable, fo, nextTurn, (i, j))
       }
 
@@ -197,7 +200,7 @@ object Main {
       }
 
       table = table.updated(pos, turn)
-      turn = Minimax.flipCell(turn)
+      turn = Flip.flipCell(turn)
     }
     println(table)
     table.winnerOpt() match {

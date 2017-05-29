@@ -174,19 +174,26 @@ object Minimax{
   * Created by Jimmy on 29/5/17.
   */
 object Main {
+
   def main(args: Array[String]): Unit = {
 
     var table = Table.initial()
     var turn: Cell = Circle
     /** Restrict: cell != turn **/
-    val human: Cell = Circle /** Restrict: cell != turn **/
+    val humanOpt: Option[Cell] = humanCellOpt() /** Restrict: cell != turn **/
     while (!table.isFilled && table.winnerOpt().isEmpty) {
       println(table)
 
-      val pos: (Int, Int) = if (turn == human) {
-        playerPos(table)
-      } else {
-        Minimax.bestPos(table, turn)
+
+      val pos: (Int, Int) = humanOpt match {
+        case Some(human) =>
+          if (turn == human) {
+            playerPos(table)
+          } else {
+            Minimax.bestPos(table, turn)
+          }
+        case None =>
+          Minimax.bestPos(table, turn)
       }
 
       table = table.updated(pos, turn)
@@ -200,6 +207,29 @@ object Main {
         println("Result: draw")
     }
 
+  }
+
+  /**
+    * Get human cell (optional)
+    * if None, Machine vs Machine
+    * @return
+    */
+  def humanCellOpt(): Option[Cell] /** cell != Empty **/ = {
+    var cellTry: Try[Option[Cell]] = null
+    do{
+      println("0: Circle, 1: Cross, 2: Machine vs Machine")
+      cellTry = Try{
+        val i = scala.io.StdIn.readLine().toInt
+        require(i == 0 || i == 1 || i == 2)
+        i match {
+          case 0 => Some(Circle)
+          case 1 => Some(Cross)
+          case 2 => None
+        }
+      }
+    } while(cellTry.isFailure)
+
+    cellTry.get
   }
 
 

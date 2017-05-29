@@ -143,7 +143,7 @@ object Minimax{
     val updatedTable = table.updated(pos, turn)
 
 
-    if(updatedTable.isFilled){
+    if(updatedTable.isFilled || updatedTable.winnerOpt().isDefined){
 
       updatedTable.winnerOpt() match {
         // Win or Lose

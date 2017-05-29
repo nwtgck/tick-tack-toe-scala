@@ -20,7 +20,7 @@ object Minimax{
     }
   }
 
-  def minimax(table: Table, fo: Cell, turn: Cell, pos: (Int, Int)): Int = {
+  def minimax(table: Table, subjectCell: Cell, turn: Cell, pos: (Int, Int)): Int = {
 
     val updatedTable = table.updated(pos, turn)
 
@@ -29,7 +29,7 @@ object Minimax{
 
       updatedTable.winnerOpt() match {
         // Win or Lose
-        case Some(winner) => if(winner == fo) 1 else -1
+        case Some(winner) => if(winner == subjectCell) 1 else -1
         // Draw
         case None         => 0
       }
@@ -40,10 +40,10 @@ object Minimax{
         if updatedTable((i, j)) == Empty
       } yield {
         val nextTurn   = FlipCell.flipCell(turn)
-        minimax(updatedTable, fo, nextTurn, (i, j))
+        minimax(updatedTable, subjectCell, nextTurn, (i, j))
       }
 
-      if(fo == turn){
+      if(subjectCell == turn){
         evaluatedValues.min
       } else {
         evaluatedValues.max

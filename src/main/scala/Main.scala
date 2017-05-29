@@ -128,7 +128,7 @@ object Minimax{
     * @param turn
     * @return
     */
-  def bestPos(table: Table, turn: Cell): (Int, Int) = {
+  def bestPos(table: Table, turn: Cell, random: scala.util.Random): (Int, Int) = {
     require(turn != Empty)
     val candidatePoss: Seq[(Int, Int)] = for{
       i <- 0 to 2
@@ -136,7 +136,8 @@ object Minimax{
       if table((i, j)) == Empty
     } yield (i, j)
 
-    candidatePoss.maxBy{pos =>
+
+    random.shuffle(candidatePoss).maxBy{pos =>
       minimax(table, turn, turn, pos)
     }
   }
@@ -180,10 +181,17 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 
+    // Get random seed
+    val randomSeed: Int = inputRandomSeed()
+    val random = new scala.util.Random(seed = randomSeed)
+
+
     var table = Table.initial()
     var turn: Cell = Circle
     /** Restrict: cell != turn **/
     val humanOpt: Option[Cell] = humanCellOpt() /** Restrict: cell != turn **/
+
+
     while (!table.isFilled && table.winnerOpt().isEmpty) {
       println(table)
 
@@ -193,10 +201,10 @@ object Main {
           if (turn == human) {
             playerPos(table)
           } else {
-            Minimax.bestPos(table, turn)
+            Minimax.bestPos(table, turn, random)
           }
         case None =>
-          Minimax.bestPos(table, turn)
+          Minimax.bestPos(table, turn, random)
       }
 
       table = table.updated(pos, turn)
@@ -263,4 +271,20 @@ object Main {
 
     triedPos.get
   }
+
+
+  /**
+    * Input random seed
+    * @return
+    */
+  def inputRandomSeed(): Int = {
+    var seedTry: Try[Int] = null
+    do {
+      print("Random seed: ")
+      seedTry = Try(scala.io.StdIn.readLine().toInt)
+    } while(seedTry.isFailure)
+
+    seedTry.get
+  }
+
 }

@@ -1,6 +1,6 @@
 package io.github.nwtgck.ticktacktoe
 
-object Flip{
+object FlipCell{
   /**
     * Flip the cell
     * @param cell

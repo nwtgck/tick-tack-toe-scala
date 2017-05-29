@@ -39,7 +39,7 @@ object Minimax{
         j <- 0 to 2
         if updatedTable((i, j)) == Empty
       } yield {
-        val nextTurn   = Flip.flipCell(turn)
+        val nextTurn   = FlipCell.flipCell(turn)
         minimax(updatedTable, fo, nextTurn, (i, j))
       }
 

@@ -37,7 +37,7 @@ object Main {
       }
 
       table = table.updated(pos, turn)
-      turn = Flip.flipCell(turn)
+      turn = FlipCell.flipCell(turn)
     }
     println(table)
     table.winnerOpt() match {

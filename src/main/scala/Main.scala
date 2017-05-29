@@ -256,9 +256,9 @@ object Main {
     var triedPos: Try[(Int, Int)] = null
 
     do{
-      val triedInt: Try[Int] = Try(scala.io.StdIn.readLine().toInt)
+      print("Your pos: ")
       triedPos = Try{
-        val ij: Int = triedInt.get
+        val ij: Int = scala.io.StdIn.readLine().toInt
         val i: Int = ij / 10
         val j: Int = ij % 10
         require(0 <= i && i <= 2)

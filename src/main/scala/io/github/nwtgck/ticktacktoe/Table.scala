@@ -11,7 +11,7 @@ object Table{
   }
 }
 
-class Table(private val inner: Array[Array[Cell]]){
+case class Table(private val inner: Array[Array[Cell]]){
 
   /**
     * Return a cell in the specific position

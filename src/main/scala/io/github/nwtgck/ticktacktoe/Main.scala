@@ -1,6 +1,7 @@
 import io.github.nwtgck.ticktacktoe._
+import io.github.nwtgck.ticktacktoe.player.{HumanPlayer, MinimaxPlayer, Player}
 
-import scala.util.Try
+import scala.util.{Random, Try}
 
 
 /**
@@ -17,24 +18,21 @@ object Main {
 
     var table = Table.initial()
     var turn: Cell = Circle
-    /** Restrict: cell != turn **/
-    val humanOpt: Option[Cell] = humanCellOpt() /** Restrict: cell != turn **/
+
+
+    val player1 = decidePlayer(Circle, random)
+    val player2 = decidePlayer(Cross, random)
 
 
     while (!table.isFilled && table.winnerOpt().isEmpty) {
       println(table)
 
-
-      val pos: (Int, Int) = humanOpt match {
-        case Some(human) =>
-          if (turn == human) {
-            playerPos(table)
-          } else {
-            Minimax.bestPos(table, turn, random)
-          }
-        case None =>
-          Minimax.bestPos(table, turn, random)
-      }
+      val pos: (Int, Int) =
+        if(turn == Circle){
+          player1.move(table)
+        } else {
+          player2.move(table)
+        }
 
       table = table.updated(pos, turn)
       turn = FlipCell.flipCell(turn)
@@ -49,56 +47,26 @@ object Main {
 
   }
 
+
   /**
-    * Get human cell (optional)
-    * if None, Machine vs Machine
+    * Get player decision
     * @return
     */
-  def humanCellOpt(): Option[Cell] /** cell != Empty **/ = {
-    var cellTry: Try[Option[Cell]] = null
+  def decidePlayer(turn: Cell /** != Empty **/, random: Random): Player = {
+    var playerTry: Try[Player] = null
     do{
-      println("0: Circle, 1: Cross, 2: Machine vs Machine")
-      cellTry = Try{
+      println(s"${turn} (human:1, minimax:2):")
+      playerTry = Try{
         val i = scala.io.StdIn.readLine().toInt
-        require(i == 0 || i == 1 || i == 2)
+        require(i == 1 || i == 2)
         i match {
-          case 0 => Some(Circle)
-          case 1 => Some(Cross)
-          case 2 => None
+          case 1 => new HumanPlayer()
+          case 2 => new MinimaxPlayer(random, turn)
         }
       }
-    } while(cellTry.isFailure)
+    } while(playerTry.isFailure)
 
-    cellTry.get
-  }
-
-
-  /**
-    * Get player position
-    * @param table
-    * @return
-    */
-  def playerPos(table: Table): (Int, Int) = {
-    var i: Int = 0
-    var j: Int = 0
-
-    var triedPos: Try[(Int, Int)] = null
-
-    do{
-      print("Your pos: ")
-      triedPos = Try{
-        val ij: Int = scala.io.StdIn.readLine().toInt
-        val i: Int = ij / 10
-        val j: Int = ij % 10
-        require(0 <= i && i <= 2)
-        require(0 <= j && j <= 2)
-        require(table((i, j)) == Empty)
-        (i, j)
-      }
-    } while (triedPos.isFailure)
-
-
-    triedPos.get
+    playerTry.get
   }
 
 

@@ -1,12 +1,25 @@
-package io.github.nwtgck.ticktacktoe
+package io.github.nwtgck.ticktacktoe.player
+import io.github.nwtgck.ticktacktoe.{Cell, Empty, FlipCell, Table}
 
-object Minimax{
+import scala.util.Random
+
+/**
+  * Created by Ryo on 2017/06/13.
+  */
+class MinimaxPlayer(random: Random, turn: Cell) extends Player{
+  /**
+    * Move a circle or a cross
+    * @param table
+    * @return
+    */
+  override def move(table: Table): (Int, Int) = bestPos(table, turn)
+
   /**
     * Find the best for turn
     * @param turn
     * @return
     */
-  def bestPos(table: Table, turn: Cell, random: scala.util.Random): (Int, Int) = {
+  def bestPos(table: Table, turn: Cell): (Int, Int) = {
     require(turn != Empty)
     val candidatePoss: Seq[(Int, Int)] = for{
       i <- 0 to 2
@@ -51,4 +64,3 @@ object Minimax{
     }
   }
 }
-

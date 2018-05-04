@@ -9,9 +9,9 @@ object GameOrganizer {
 
   /**
     *
-    * @param nPlay the number of plays
+    * @param nPlays the number of plays
     */
-  def runGame(player1: Player, player2: Player, showTable: Boolean = true, nPlay: Int = 1): Unit = {
+  def runGame(player1: Player, player2: Player, showTable: Boolean = true, nPlays: Int = 1): Unit = {
 
     var table = Table.initial()
     var turn: Cell = Circle

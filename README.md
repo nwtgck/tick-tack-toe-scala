@@ -11,8 +11,7 @@ Tick-Tack-Toe written in Scala by using minimax
 sbt run
 ```
 
-## How to play
-
+## Human vs Machine
 
 Random seed: 76  
 Circle player: human  
@@ -21,6 +20,8 @@ Cross player : default ("minimax")
 ```bash
 sbt "runMain io.github.nwtgck.ticktacktoe.Main --random-seed=76 --circle=human"
 ```
+
+NOTE: The "minimax" machine finds **all possible moves**. So you never win this game unless it has a bug.
 
 ## Available options
 

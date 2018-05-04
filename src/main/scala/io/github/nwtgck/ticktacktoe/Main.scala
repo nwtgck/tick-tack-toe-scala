@@ -38,7 +38,7 @@ object Main {
           case "minimax" => (random, turn) => new MinimaxPlayer(random, turn)
         }
         opts.copy(circlePlayerGenerator = playerGenerator)
-      } text s"player of circle"
+      } text s"""player of circle ("human" or "minimax")"""
 
       opt[String]("cross") action { (v, opts) =>
         val playerGenerator: PlayerGenerator = v match {
@@ -46,7 +46,7 @@ object Main {
           case "minimax" => (random, turn) => new MinimaxPlayer(random, turn)
         }
         opts.copy(crossPlayerGenerator = playerGenerator)
-      } text s"player of cross"
+      } text s"""player of cross  ("human" or "minimax")"""
     }
 
     parser.parse(args, defaultOpts) match {

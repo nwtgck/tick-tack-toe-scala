@@ -1,46 +1,32 @@
 # Tick-Tack-Toe in Scala
-
-
-## What is this?
+[![Build Status](https://travis-ci.com/nwtgck/tick-tack-toe-scala.svg?branch=master)](https://travis-ci.com/nwtgck/tick-tack-toe-scala)
 
 Tick-Tack-Toe written in Scala by using minimax
 
 
+## Machine vs Machine
+
+```bash
+sbt run
+```
+
 ## How to play
 
-### 1. Choose a random seed
 
-```
-Random seed: 10
-```
+Random seed: 76  
+Circle player: human  
+Cross player : default ("minimax")  
 
-In this case, the random seed is `10`
-
-
-### 2. Choose a mode
-
-```
-0: Circle, 1: Cross, 2: Machine vs Machine
-1
+```bash
+sbt "runMain io.github.nwtgck.ticktacktoe.Main --random-seed=76 --circle=human"
 ```
 
-`1` is your input. `1` means you choosed `Cross`
+## Available options
 
+```txt
+Usage: Tick Tack Toe [options]
 
-
-### 3. Choose a position
-
-```
-Your pos: 11
-```
-
-`11` is middle center.
-
-Position table is here.
-```
-|00 | 01 | 02|
-
-|10 | 11 | 12|
-
-|20 | 21 | 22|
+  --random-seed <value>  random seed (default: 10)
+  --circle <value>       player of circle ("human" or "minimax")
+  --cross <value>        player of cross  ("human" or "minimax")
 ```

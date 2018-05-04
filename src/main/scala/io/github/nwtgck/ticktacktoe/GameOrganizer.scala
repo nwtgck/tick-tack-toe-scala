@@ -13,32 +13,35 @@ object GameOrganizer {
     */
   def runGame(player1: Player, player2: Player, showTable: Boolean = true, nPlay: Int = 1): Unit = {
 
-    var table = Table.initial()
-    var turn: Cell = Circle
+    for(i <- 1 to nPlay) {
+      var table = Table.initial()
+      var turn: Cell = Circle
 
-    while (!table.isFilled && table.winnerOpt().isEmpty) {
-      println(table)
+      while (!table.isFilled && table.winnerOpt().isEmpty) {
+        if(showTable)
+          println(table)
 
-      val pos: (Int, Int) =
-        if(turn == Circle){
-          player1.move(table)
-        } else {
-          player2.move(table)
-        }
+        val pos: (Int, Int) =
+          if (turn == Circle) {
+            player1.move(table)
+          } else {
+            player2.move(table)
+          }
 
-      table = table.updated(pos, turn)
-      turn = FlipCell.flipCell(turn)
-    }
+        table = table.updated(pos, turn)
+        turn = FlipCell.flipCell(turn)
+      }
 
-    if(showTable)
+      if (showTable)
       // Display table
-      println(table)
+        println(table)
 
-    table.winnerOpt() match {
-      case Some(winner) =>
-        println(s"Winner: ${winner}")
-      case None =>
-        println("Result: draw")
+      table.winnerOpt() match {
+        case Some(winner) =>
+          println(s"Winner: ${winner}")
+        case None =>
+          println("Result: draw")
+      }
     }
   }
 }

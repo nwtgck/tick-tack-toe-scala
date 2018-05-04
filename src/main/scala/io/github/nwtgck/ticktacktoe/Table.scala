@@ -40,6 +40,15 @@ case class Table(private val inner: Array[Array[Cell]]){
   }
 
   /**
+    * Return empty positoins
+    */
+  lazy val emptyPoss: Seq[(Int, Int)] = for{
+    i <- 0 to 2
+    j <- 0 to 2
+    if this.apply((i, j)) == Empty
+  } yield (i, j)
+
+  /**
     * Winner (optional)
     * @return
     */

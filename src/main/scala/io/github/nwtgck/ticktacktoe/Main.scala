@@ -1,5 +1,5 @@
 import io.github.nwtgck.ticktacktoe._
-import io.github.nwtgck.ticktacktoe.player.{HumanPlayer, MinimaxPlayer, Player}
+import io.github.nwtgck.ticktacktoe.player.{HumanPlayer, MinimaxPlayer, Player, QLearingPlayer}
 
 import scala.util.{Random, Try}
 
@@ -16,12 +16,26 @@ object Main {
     val random = new scala.util.Random(seed = randomSeed)
 
 
-    // Decide players by user input
-    val player1 = decidePlayer(Circle, random)
-    val player2 = decidePlayer(Cross, random)
 
-    // Start game
-    GameOrganizer.runGame(player1, player2, showTable = true, nPlay = 1)
+    val p1 = new QLearingPlayer(random = random)
+    val p2 = new MinimaxPlayer(random, Cross)//new QLearingPlayer(random = random)
+
+
+    QLearning.learn(random, p2, showTable = false, nPlay = 100000)
+
+    p1.epsilon = 0
+
+    GameOrganizer.runGame(p1, new HumanPlayer(), showTable = true, nPlay = 100)
+
+//    println(p1.qTable)
+//    println(p2.qTable)
+
+//    // Decide players by user input
+//    val player1 = decidePlayer(Circle, random)
+//    val player2 = decidePlayer(Cross, random)
+//
+//    // Start game
+//    GameOrganizer.runGame(player1, player2, showTable = true, nPlay = 1)
   }
 
 

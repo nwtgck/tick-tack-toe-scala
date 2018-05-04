@@ -2,11 +2,15 @@ package io.github.nwtgck.ticktacktoe.player
 import io.github.nwtgck.ticktacktoe.{Cell, Empty, FlipCell, Table}
 
 import scala.util.Random
+import collection.mutable
 
 /**
   * Created by Ryo on 2017/06/13.
   */
 class MinimaxPlayer(random: Random, turn: Cell) extends Player{
+
+  private[this] val minimaxCache: mutable.Map[(Table, Cell, Cell, (Int, Int)), Int] = mutable.Map.empty
+
   /**
     * Move a circle or a cross
     * @param table
@@ -21,16 +25,10 @@ class MinimaxPlayer(random: Random, turn: Cell) extends Player{
     */
   def bestPos(table: Table, turn: Cell): (Int, Int) = {
     require(turn != Empty)
-    val candidatePoss: Seq[(Int, Int)] = for{
-      i <- 0 to 2
-      j <- 0 to 2
-      if table((i, j)) == Empty
-    } yield (i, j)
+    val candidatePoss: Seq[(Int, Int)] = table.emptyPoss
 
 
-    random.shuffle(candidatePoss).maxBy{pos =>
-      minimax(table, turn, turn, pos)
-    }
+    random.shuffle(candidatePoss).maxBy{pos => minimax(table, turn, turn, pos)}
   }
 
   def minimax(table: Table, subjectCell: Cell, turn: Cell, pos: (Int, Int)): Int = {

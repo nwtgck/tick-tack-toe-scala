@@ -3,6 +3,7 @@
 
 Tick-Tack-Toe written in Scala by using minimax
 
+![demo1](demo_images/demo1.gif)
 
 ## Machine vs Machine
 

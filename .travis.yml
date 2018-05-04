@@ -15,5 +15,5 @@ cache:
 
 script:
   # NOTE: Working test
-  # (seed: 10, Circle: minimax, Cross: minimax)
-  - echo -e "10\n2\n2" | sbt run
+  # (This should be a game of machine vs machine)
+  - sbt run

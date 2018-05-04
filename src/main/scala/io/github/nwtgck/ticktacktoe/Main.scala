@@ -1,64 +1,68 @@
-import io.github.nwtgck.ticktacktoe._
+package io.github.nwtgck.ticktacktoe
+
 import io.github.nwtgck.ticktacktoe.player.{HumanPlayer, MinimaxPlayer, Player}
 
-import scala.util.{Random, Try}
+import scala.util.Random
 
 
 /**
-  * Created by Jimmy on 29/5/17.
+  * Created by Ryo on 29/5/17.
   */
 object Main {
 
+  type PlayerGenerator = (Random, Cell /** != Empty **/) => Player
+  case class TickTackToeOptions(randomSeed : Int,
+                                circlePlayerGenerator: PlayerGenerator,
+                                crossPlayerGenerator:  PlayerGenerator
+                               )
+
   def main(args: Array[String]): Unit = {
 
-    // Get random seed
-    val randomSeed: Int = inputRandomSeed()
-    val random = new scala.util.Random(seed = randomSeed)
+    // Default options
+    val defaultOpts: TickTackToeOptions =
+      TickTackToeOptions(
+        randomSeed            = 10,
+        circlePlayerGenerator = (random, turn) => new MinimaxPlayer(random, turn),
+        crossPlayerGenerator  = (random, turn) => new MinimaxPlayer(random, turn)
+      )
 
+    // Option parser
+    val parser = new scopt.OptionParser[TickTackToeOptions]("Tick Tack Toe") {
+      opt[Int]("random-seed") action { (v, opts) =>
+        opts.copy(randomSeed = v)
+      } text s"random seed (default: ${defaultOpts.randomSeed})"
 
-    // Decide players by user input
-    val player1 = decidePlayer(Circle, random)
-    val player2 = decidePlayer(Cross, random)
-
-    // Start game
-    GameOrganizer.runGame(player1, player2, showTable = true, nPlay = 1)
-  }
-
-
-  /**
-    * Get player decision
-    * @return
-    */
-  def decidePlayer(turn: Cell /** != Empty **/, random: Random): Player = {
-    var playerTry: Try[Player] = null
-    do{
-      println(s"${turn} (human:1, minimax:2):")
-      playerTry = Try{
-        val i = scala.io.StdIn.readLine().toInt
-        require(i == 1 || i == 2)
-        i match {
-          case 1 => new HumanPlayer()
-          case 2 => new MinimaxPlayer(random, turn)
+      opt[String]("circle") action { (v, opts) =>
+        val playerGenerator: PlayerGenerator = v match {
+          case "human"   => (_, _)         => new HumanPlayer()
+          case "minimax" => (random, turn) => new MinimaxPlayer(random, turn)
         }
-      }
-    } while(playerTry.isFailure)
+        opts.copy(circlePlayerGenerator = playerGenerator)
+      } text s"player of circle"
 
-    playerTry.get
-  }
+      opt[String]("cross") action { (v, opts) =>
+        val playerGenerator: PlayerGenerator = v match {
+          case "human"   => (_, _)         => new HumanPlayer()
+          case "minimax" => (random, turn) => new MinimaxPlayer(random, turn)
+        }
+        opts.copy(crossPlayerGenerator = playerGenerator)
+      } text s"player of cross"
+    }
 
+    parser.parse(args, defaultOpts) match {
+      case Some(options) =>
+        // Get random seed
+        val randomSeed: Int = options.randomSeed
+        val random = new scala.util.Random(seed = randomSeed)
 
-  /**
-    * Input random seed
-    * @return
-    */
-  def inputRandomSeed(): Int = {
-    var seedTry: Try[Int] = null
-    do {
-      print("Random seed: ")
-      seedTry = Try(scala.io.StdIn.readLine().toInt)
-    } while(seedTry.isFailure)
+        // Generate players
+        val player1: Player = options.circlePlayerGenerator(random, Circle)
+        val player2 : Player = options.crossPlayerGenerator(random, Cross)
 
-    seedTry.get
+        // Start game
+        GameOrganizer.runGame(player1, player2, showTable = true, nPlays = 1)
+      case None => ()
+    }
   }
 
 }

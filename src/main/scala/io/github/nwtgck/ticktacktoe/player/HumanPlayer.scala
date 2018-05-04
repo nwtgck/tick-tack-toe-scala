@@ -14,6 +14,9 @@ class HumanPlayer extends Player{
     var triedPos: Try[(Int, Int)] = null
 
     do{
+      println("""||00|01|02|
+                 ||10|11|12|
+                 ||20|21|22|""".stripMargin)
       print("Your pos: ")
       triedPos = Try{
         val ij: Int = scala.io.StdIn.readLine().toInt
